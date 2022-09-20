@@ -15,4 +15,31 @@ Let's import data using the `readr` package.
 litters_df = read_csv("data/FAS_litters.csv")
 litters_df = janitor :: clean_names(litters_df) #In the janitor package, load the clean_names function
 ```
+Look at the data
+```{r}
+litters_df
+head(litters_df)
+tail(litters_df)
+```
+
+```{r, eval=FALSE}
+view(litters_df)
+```
+
+```{r}
+skimr :: skim(litters_df)
+```
+
+`read_csv` options ..
+```{r, eval=FALSE}
+read_csv("data/FAS_litters.csv", na=c("", "NA",999,88)) #How to mark missing data
+read_csv("data/FAS_litters.csv", na=c("", "NA",999,88), skip=2) # How to skip the first 2 rows
+
+```
+
+```{r}
+
+```
+
+
 
