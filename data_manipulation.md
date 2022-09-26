@@ -452,3 +452,65 @@ arrange(litters_df, pups_born_alive)
     ## 10 Con7  #4/2/95/3-3         NA          NA           20       6       0       6
     ## # … with 39 more rows, and abbreviated variable names ¹​gd_of_birth,
     ## #   ²​pups_born_alive, ³​pups_dead_birth, ⁴​pups_survive
+
+## `%>%`
+
+``` r
+litters_data_raw = read_csv("./data/FAS_litters.csv")
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_clean_name = janitor::clean_names(litters_data_raw)
+litters_data_selected = select(litters_clean_name, -pups_survive)
+litters_mutated = mutate(litters_data_selected, wt_gain = gd18_weight - gd0_weight)
+llitters_without_missing = drop_na(litters_mutated, gd0_weight) #removes na from gd0_weight
+```
+
+Use the pipe operator instead.
+
+``` r
+litters_df = 
+  read_csv("./data/FAS_litters.csv") %>% 
+  janitor::clean_names() %>% 
+  select(-pups_survive) %>% 
+  mutate(wt_gain = gd18_weight - gd0_weight) %>% 
+  drop_na(gd0_weight)
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+litters_df
+```
+
+    ## # A tibble: 34 × 8
+    ##    group litter_number gd0_weight gd18_weight gd_of_bi…¹ pups_…² pups_…³ wt_gain
+    ##    <chr> <chr>              <dbl>       <dbl>      <dbl>   <dbl>   <dbl>   <dbl>
+    ##  1 Con7  #85                 19.7        34.7         20       3       4    15  
+    ##  2 Con7  #1/2/95/2           27          42           19       8       0    15  
+    ##  3 Con7  #5/5/3/83/3-3       26          41.4         19       6       0    15.4
+    ##  4 Con7  #5/4/2/95/2         28.5        44.1         19       5       1    15.6
+    ##  5 Con8  #3/5/2/2/95         28.5        NA           20       8       0    NA  
+    ##  6 Con8  #5/4/3/83/3         28          NA           19       9       0    NA  
+    ##  7 Mod7  #59                 17          33.4         19       8       0    16.4
+    ##  8 Mod7  #103                21.4        42.1         19       9       1    20.7
+    ##  9 Mod7  #3/82/3-2           28          45.9         20       5       0    17.9
+    ## 10 Mod7  #4/2/95/2           23.5        NA           19       9       0    NA  
+    ## # … with 24 more rows, and abbreviated variable names ¹​gd_of_birth,
+    ## #   ²​pups_born_alive, ³​pups_dead_birth
